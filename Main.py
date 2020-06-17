@@ -3,8 +3,21 @@ from PIL import Image
 from PIL import ImageFilter
 import io
 import cv2
-
+import threading
+from multiprocessing import Pool
+from multiprocessing import Process, Queue
 vc = cv2.VideoCapture(0)
+
+
+def getImage():
+    vc = cv2.VideoCapture(0)
+    if vc.isOpened():
+        rval, frame = vc.read()
+        originalImage = Image.fromarray(frame, mode='RGB')
+        originalImage240x240 = originalImage
+        originalImage240x240.thumbnail((240, 240))
+        #q.put(originalImage240x240)
+        return originalImage240x240
 
 
 class Window:
@@ -43,7 +56,7 @@ class Window:
         self.getCambutton = Button(toolbar, text="Capture", command=self.capture)
         self.getCambutton.grid(row=1, column=4)
 
-        # im = Image.open("lena.png")
+        #im = Image.open("lena.png")
         im = Image.open("Default.png")
         self.originalImage = im
         self.originalImage240x240 = self.originalImage
@@ -464,6 +477,7 @@ class Window:
         self.originalImage480x480 = self.originalImage
         self.originalImage480x480.thumbnail((480, 480))
 
+        '''
         self.loadOriginal()
         self.loadGrayscale()
         self.loadQuantize(5)
@@ -479,6 +493,68 @@ class Window:
         self.smooth()
         self.smooth_more()
         self.sharpen()
+        '''
+
+        loadOriginal = threading.Thread(group=None, target=self.loadOriginal, name=None, args=(), kwargs={})
+        loadOriginal.start()
+        # self.loadOriginal()
+
+        loadGrayscale = threading.Thread(group=None, target=self.loadGrayscale, name=None, args=(), kwargs={})
+        loadGrayscale.start()
+        # self.loadGrayscale()
+
+        quantizeValue = self.quantizeScale.get()
+        loadQuantize = threading.Thread(group=None, target=self.loadQuantize, name=None, args=[quantizeValue], kwargs={})
+        loadQuantize.start()
+        # self.loadQuantize(5)
+
+        binary = threading.Thread(group=None, target=self.binary, name=None, args=(), kwargs={})
+        binary.start()
+        # self.binary()
+
+        rgb = threading.Thread(group=None, target=self.RGB, name=None, args=(), kwargs={})
+        rgb.start()
+        # self.RGB()
+
+        blur = threading.Thread(group=None, target=self.blur, name=None, args=(), kwargs={})
+        blur.start()
+        # self.blur()
+
+        contour = threading.Thread(group=None, target=self.contour, name=None, args=(), kwargs={})
+        contour.start()
+        # self.contour()
+
+        detail = threading.Thread(group=None, target=self.detail, name=None, args=(), kwargs={})
+        detail.start()
+        # self.detail()
+
+        edge_enhance = threading.Thread(group=None, target=self.edge_enhance, name=None, args=(), kwargs={})
+        edge_enhance.start()
+        # self.edge_enhance()
+
+        edge_enhance_more = threading.Thread(group=None, target=self.edge_enhance_more, name=None, args=(), kwargs={})
+        edge_enhance_more.start()
+        # self.edge_enhance_more()
+
+        emboss = threading.Thread(group=None, target=self.emboss, name=None, args=(), kwargs={})
+        emboss.start()
+        # self.emboss()
+
+        find_edges = threading.Thread(group=None, target=self.find_edges, name=None, args=(), kwargs={})
+        find_edges.start()
+        # self.find_edges()
+
+        smooth = threading.Thread(group=None, target=self.smooth, name=None, args=(), kwargs={})
+        smooth.start()
+        # self.smooth()
+
+        smooth_more = threading.Thread(group=None, target=self.smooth_more, name=None, args=(), kwargs={})
+        smooth_more.start()
+        # self.smooth_more()
+
+        sharpen = threading.Thread(group=None, target=self.sharpen, name=None, args=(), kwargs={})
+        sharpen.start()
+        # self.sharpen()
 
     def capture(self):
         if vc.isOpened():
@@ -492,21 +568,66 @@ class Window:
             self.originalImage480x480 = self.originalImage
             self.originalImage480x480.thumbnail((480, 480))
 
-            self.loadOriginal()
-            self.loadGrayscale()
-            self.loadQuantize(5)
-            self.binary()
-            self.RGB()
-            self.blur()
-            self.contour()
-            self.detail()
-            self.edge_enhance()
-            self.edge_enhance_more()
-            self.emboss()
-            self.find_edges()
-            self.smooth()
-            self.smooth_more()
-            self.sharpen()
+            loadOriginal = threading.Thread(group=None, target=self.loadOriginal, name=None, args=(), kwargs={})
+            loadOriginal.start()
+            #self.loadOriginal()
+
+            loadGrayscale = threading.Thread(group=None, target=self.loadGrayscale, name=None, args=(), kwargs={})
+            loadGrayscale.start()
+            #self.loadGrayscale()
+
+            quantizeValue = self.quantizeScale.get()
+            loadQuantize = threading.Thread(group=None, target=self.loadQuantize, name=None, args=[quantizeValue],kwargs={})
+            loadQuantize.start()
+            #self.loadQuantize(5)
+
+            binary = threading.Thread(group=None, target=self.binary, name=None, args=(), kwargs={})
+            binary.start()
+            #self.binary()
+
+            rgb = threading.Thread(group=None, target=self.RGB, name=None, args=(), kwargs={})
+            rgb.start()
+            #self.RGB()
+
+            blur = threading.Thread(group=None, target=self.blur, name=None, args=(), kwargs={})
+            blur.start()
+            #self.blur()
+
+            contour = threading.Thread(group=None, target=self.contour, name=None, args=(), kwargs={})
+            contour.start()
+            #self.contour()
+
+            detail = threading.Thread(group=None, target=self.detail, name=None, args=(), kwargs={})
+            detail.start()
+            #self.detail()
+
+            edge_enhance = threading.Thread(group=None, target=self.edge_enhance, name=None, args=(), kwargs={})
+            edge_enhance.start()
+            #self.edge_enhance()
+
+            edge_enhance_more = threading.Thread(group=None, target=self.edge_enhance_more, name=None, args=(), kwargs={})
+            edge_enhance_more.start()
+            #self.edge_enhance_more()
+
+            emboss = threading.Thread(group=None, target=self.emboss, name=None, args=(), kwargs={})
+            emboss.start()
+            #self.emboss()
+
+            find_edges = threading.Thread(group=None, target=self.find_edges, name=None, args=(), kwargs={})
+            find_edges.start()
+            #self.find_edges()
+
+            smooth = threading.Thread(group=None, target=self.smooth, name=None, args=(), kwargs={})
+            smooth.start()
+            #self.smooth()
+
+            smooth_more = threading.Thread(group=None, target=self.smooth_more, name=None, args=(), kwargs={})
+            smooth_more.start()
+            #self.smooth_more()
+
+            sharpen = threading.Thread(group=None, target=self.sharpen, name=None, args=(), kwargs={})
+            sharpen.start()
+            #self.sharpen()
 
 
 root = Tk()
