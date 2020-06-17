@@ -332,48 +332,48 @@ class Window:
             listB = list(B.getdata())
 
             for i, px in enumerate(R.getdata()):
-                y = i / width
-                x = i % width
+                y = int(i / width)
+                x = int(i % width)
                 image.putpixel((x, y), (px, 0, 0))
             photo = self.imageToBytes(image)
             self.RImageView["image"] = photo
             self.RPhoto = photo
 
             for i, px in enumerate(G.getdata()):
-                y = i / width
-                x = i % width
+                y = int(i / width)
+                x = int(i % width)
                 image.putpixel((x, y), (0, px, 0))
             photo = self.imageToBytes(image)
             self.GImageView["image"] = photo
             self.GPhoto = photo
 
             for i, px in enumerate(B.getdata()):
-                y = i / width
-                x = i % width
+                y = int(i / width)
+                x = int(i % width)
                 image.putpixel((x, y), (0, 0, px))
             photo = self.imageToBytes(image)
             self.BImageView["image"] = photo
             self.BPhoto = photo
 
             for i, px in enumerate(G.getdata()):
-                y = i / width
-                x = i % width
+                y = int(i / width)
+                x = int(i % width)
                 image.putpixel((x, y), (0, px, listB[i]))
             photo = self.imageToBytes(image)
             self.GBImageView["image"] = photo
             self.GBPhoto = photo
 
             for i, px in enumerate(B.getdata()):
-                y = i / width
-                x = i % width
+                y = int(i / width)
+                x = int(i % width)
                 image.putpixel((x, y), (listR[i], 0, px))
             photo = self.imageToBytes(image)
             self.RBImageView["image"] = photo
             self.RBPhoto = photo
 
             for i, px in enumerate(R.getdata()):
-                y = i / width
-                x = i % width
+                y = int(i / width)
+                x = int(i % width)
                 image.putpixel((x, y), (px, listG[i], 0))
             photo = self.imageToBytes(image)
             self.RGImageView["image"] = photo
@@ -450,7 +450,8 @@ class Window:
         self.filterSharpenPhoto = photo
 
     def browseimg(self):
-        from tkFileDialog import askopenfilename
+        from tkinter.filedialog import askopenfilename
+        # from tkFileDialog import askopenfilename
         Tk().withdraw()
         self.filename = askopenfilename()
         self.imageInput.delete(0, END)
